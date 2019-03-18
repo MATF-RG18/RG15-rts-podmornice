@@ -23,7 +23,7 @@ static void on_display(void);
 
 int pauseGame = true;
 float rotation_parametar = pi/4;
-bool coords = false;
+int coords = false;
 int cPers = 17;
 float mainShipX = 0;
 float mainShipZ = 5;
