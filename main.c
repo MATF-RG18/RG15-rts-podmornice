@@ -11,6 +11,7 @@
 #include "reshape.h"
 #include "keyboard.h"
 #include "display.h"
+#include "functions.h"
 
 
 
@@ -20,12 +21,20 @@
 
 
 
+float cPers = 17;
 int pauseGame = true;
 float rotation_parametar = pi/4;
 int coords = false;
-float mainShipX = 0;
-float mainShipZ = 5;
-float mainShipSpeed = 0.2;
+float heliX = 0;
+float heliZ = 5.5;
+int playerShips[10][10];
+float AIShips[10][10];
+float heliDirAngle = 0;
+int heliMoved;
+int platform[NumOfPlatforms] = {0,0,0,0,0};
+float platformX[NumOfPlatforms],platformZ[NumOfPlatforms];
+float targetX = 0;
+float targetZ = -5.5;
 
 
 

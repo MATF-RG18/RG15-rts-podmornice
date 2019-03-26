@@ -3,7 +3,11 @@
 
 void on_display(void);
 
-extern float rotation_parametar, mainShipX, mainShipZ;
+extern float rotation_parametar, heliX, heliZ;
 extern int coords;
+extern int platform[];
+extern float platformX[];
+extern float platformZ[];
+extern float cPers;
 
 #endif

@@ -25,18 +25,34 @@ void on_display(void)
         );
     		
 	DrawCircle();
-	drawMainShip(mainShipX,mainShipZ);
+	drawHeli();
+	drawTarget();
+
+	int i;
+	for (i=0;i<NumOfPlatforms;i++){				//Platforms
+		if (platform[i] != 0){
+			drawPlatform(platformX[i],platformZ[i]);
+		}
+	}
+
+	draw2Ship(0,0);
+
+
 	glBegin(GL_LINES);
 
 		if (coords){
 			showCoords();
 		}
 		
-		int i,j;
-		double xPos=-5,zPos=-10.5,yPos = 0.1;
+		int j;
+
+		//grid
+		double xPos=-5,zPos=-10.5,yPos = 0.05;
 		for (i=0;i<=10;i++){
 			glColor3f (0,0,0);
 			glVertex3f(i+xPos,yPos,0+zPos);
+			glVertex3f(i+xPos,yPos,10+zPos);
+			glVertex3f(i+xPos,yPos,11+zPos);
 			glVertex3f(i+xPos,yPos,21+zPos);
 		}
 		for (j=0;j<=21;j++){
@@ -44,6 +60,7 @@ void on_display(void)
 			glVertex3f(0+xPos,yPos,j+zPos);
 			glVertex3f(10+xPos,yPos,j+zPos);
 		}
+
 		
 
 		

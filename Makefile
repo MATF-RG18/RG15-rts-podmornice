@@ -2,7 +2,7 @@ PROGRAM = podmornice
 CC		= gcc
 LDFLAGS = -Wall -Wextra
 LDLIBS	= -lGL -lGLU -lglut -lm 
-LDDEPS	= main.o draw.o coords.o timer.o reshape.o keyboard.o display.o
+LDDEPS	= main.o draw.o coords.o timer.o reshape.o keyboard.o display.o functions.o
 
 
 $(PROGRAM): $(LDDEPS)
@@ -11,7 +11,9 @@ $(PROGRAM): $(LDDEPS)
 clean:
 	rm *.o
 
-rebuild: clean $(PROGRAM)
+re: clean $(PROGRAM)
+
+rebuild: re
 
 draw.o: draw.c draw.h
 	gcc -c -o $@ $< $(LDLIBS)
@@ -29,6 +31,9 @@ keyboard.o: keyboard.c keyboard.h
 	gcc -c -o $@ $< $(LDLIBS)
 
 display.o: display.c display.h
+	gcc -c -o $@ $< $(LDLIBS)
+
+functions.o: functions.c functions.h
 	gcc -c -o $@ $< $(LDLIBS)
 
 

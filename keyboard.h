@@ -3,10 +3,15 @@
 
 extern int pauseGame;
 extern float rotation_parametar;
-extern float  mainShipX;
-extern float  mainShipZ;
-extern float  mainShipSpeed;
+extern float  heliX;
+extern float  heliZ;
+extern float heliDirAngle;
 extern int coords;
+extern int heliMoved;
+extern int platform[];
+extern float platformX[];
+extern float platformZ[];
+extern float cPers;
 
 void on_keyboard(unsigned char key, int x, int y);
 
