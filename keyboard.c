@@ -12,130 +12,89 @@
 static float pomeraj; //provera da li heli moze da se pomera za pomeraj
 
 int platformCounter = 0;
+int size2ShipCounter = 0;
+int size3ShipCounter = 0;
+int size4ShipCounter = 0;
+int size5ShipCounter = 0;
+int shipRotation=0;
+int shipSelection=0;
 
 void on_keyboard(unsigned char key, int x, int y)
 {
     
 	switch(key)
 	{
-        case 'T':
-        case 't':
+        case 'g': //zoom out
+        case 'G':
             cPers+=0.1;
             break;
-        case 'g':
-        case 'G':
+        case 't': //zoom in
+        case 'T':
             cPers-=0.1;
             break;
 
         case 'w':
         case 'W':
-            heliMoved = true;
-            heliDirAngle = 0;
-            pomeraj = heliSpeed*sin(rotation_parametar)*-1;
-            if(pauseGame && heliInsideX(pomeraj)){
-                heliX+=pomeraj;
-            }
-
-            pomeraj = heliSpeed*cos(rotation_parametar)*-1;
-            if (pauseGame && heliInsideZ(pomeraj)){
-                heliZ+=pomeraj;
+            if(pauseGame){
+                heliMoved = true;
+                heliDirAngle = 0;
             }
             break;
         case 's':
         case 'S':
-            heliMoved = true;
-            heliDirAngle = pi;
-            pomeraj = heliSpeed*sin(rotation_parametar);
-            if(pauseGame && heliInsideX(pomeraj)){
-                heliX+=pomeraj;
-            }
-
-            pomeraj = heliSpeed*cos(rotation_parametar);
-            if (pauseGame && heliInsideZ(pomeraj)){
-                heliZ+=pomeraj;
+            if(pauseGame){
+                heliMoved = true;
+                heliDirAngle = pi;
             }
             break;
 
             
         case 'a':
         case 'A':
-            heliMoved = true;
-            heliDirAngle = pi/2;
-            pomeraj = heliSpeed*sin(rotation_parametar+pi/2)*-1;
-            if(pauseGame && heliInsideX(pomeraj)){
-                heliX+=pomeraj;
-            }
-
-            pomeraj = heliSpeed*cos(rotation_parametar+pi/2)*-1;
-            if (pauseGame && heliInsideZ(pomeraj)){
-                heliZ+=pomeraj;
+            if(pauseGame){
+                heliMoved = true;
+                heliDirAngle = pi/2;
             }
             break;
             
         case 'd':
         case 'D':
-            heliMoved = true;
-            heliDirAngle = -pi/2;
-            pomeraj = heliSpeed*sin(rotation_parametar+pi/2);
-            if(pauseGame && heliInsideX(pomeraj)){
-                heliX+=pomeraj;
-            }
-
-            pomeraj = heliSpeed*cos(rotation_parametar+pi/2);
-            if (pauseGame && heliInsideZ(pomeraj)){
-                heliZ+=pomeraj;
+            if(pauseGame){
+                heliMoved = true;
+                heliDirAngle = -pi/2;
             }
             break;
 
         case 'i':
         case 'I':
-            pomeraj = targetSpeed*sin(rotation_parametar)*-1;
-            if(pauseGame && targetInsideX(pomeraj)){
-                targetX+=pomeraj;
-            }
 
-            pomeraj = targetSpeed*cos(rotation_parametar)*-1;
-            if (pauseGame && targetInsideZ(pomeraj)){
-                targetZ+=pomeraj;
+            if(pauseGame){
+                targetMoved = true;
+                targetDir = 0;
             }
             break;
         case 'k':
         case 'K':
-            pomeraj = targetSpeed*sin(rotation_parametar);
-            if(pauseGame && targetInsideX(pomeraj)){
-                targetX+=pomeraj;
-            }
-
-            pomeraj = targetSpeed*cos(rotation_parametar);
-            if (pauseGame && targetInsideZ(pomeraj)){
-                targetZ+=pomeraj;
+            if(pauseGame){
+                targetMoved = true;
+                targetDir = pi;
             }
             break;
 
             
         case 'j':
         case 'J':
-            pomeraj = targetSpeed*sin(rotation_parametar+pi/2)*-1;
-            if(pauseGame && targetInsideX(pomeraj)){
-                targetX+=pomeraj;
-            }
-
-            pomeraj = targetSpeed*cos(rotation_parametar+pi/2)*-1;
-            if (pauseGame && targetInsideZ(pomeraj)){
-                targetZ+=pomeraj;
+            if(pauseGame){
+                targetMoved = true;
+                targetDir = pi/2;
             }
             break;
             
         case 'l':
         case 'L':
-            pomeraj = targetSpeed*sin(rotation_parametar+pi/2);
-            if(pauseGame && targetInsideX(pomeraj)){
-                targetX+=pomeraj;
-            }
-
-            pomeraj = targetSpeed*cos(rotation_parametar+pi/2);
-            if (pauseGame && targetInsideZ(pomeraj)){
-                targetZ+=pomeraj;
+            if(pauseGame){
+                targetMoved = true;
+                targetDir = -pi/2;
             }
             break;
 
@@ -155,12 +114,12 @@ void on_keyboard(unsigned char key, int x, int y)
         case 'q':
         case 'Q':
         	if(pauseGame)
-	        	rotation_parametar+=0.03;
+	        	rotationDir=rotationSpeed;
 	        break;
         case 'e':
         case 'E':
         	if(pauseGame)
-        		rotation_parametar-=0.03;
+        		rotationDir=-rotationSpeed;
         	break;
         case 'o':
         case 'O':
@@ -173,16 +132,88 @@ void on_keyboard(unsigned char key, int x, int y)
         	}
         	break;
 
-
-        case '1':
-            if (platformCounter < NumOfPlatforms){
-                platformX[platformCounter] = getHeliX();
-                platformZ[platformCounter] = getHeliZ();
-                platform[platformCounter]=1;
-                platformCounter++;
-                //treba azurirati matricu brodova
+        case 'r':
+        case 'R':
+            if(shipSelection != 0){
+                shipRotation+=1;
+                shipRotation%=4;
             }
             break;
+
+        case ' ':
+            if(shipSelection != 0){
+                if (canPlaceShip(shipSelection,shipRotation) != 0){
+                    placeShip(shipSelection,shipRotation);
+                    shipRotation = 0;
+                    shipSelection = 0;
+                }
+                /*
+                switch (shipSelection){
+                    case 1:
+
+
+                        if (playerShips[getPlayerMatrixX()][getPlayerMatrixZ()] == 0){
+                            platformX[platformCounter] = getHeliX();
+                            platformZ[platformCounter] = getHeliZ();
+                            platform[platformCounter]=1;
+                            platformCounter++;
+                            playerShips[getPlayerMatrixX()][getPlayerMatrixZ()]=1;
+
+                            shipRotation = 0;
+                            shipSelection = 0;
+                        }
+
+                        break;
+
+
+                    case 2:
+
+                        //TODO treba dodati proveru da li moze da se postavi
+                        size2ShipX[size2ShipCounter] = getHeliX();
+                        size2ShipZ[size2ShipCounter] = getHeliZ();
+                        size2Ship[size2ShipCounter]=1;
+                        size2ShipRotation[size2ShipCounter] = shipRotation;
+                        size2ShipCounter++;
+
+                        
+
+                        break;
+                }
+                */
+            
+                
+            }
+            break;
+        case 'v':
+            printXZ();
+            break;
+
+        case '1':
+            if (platformCounter < numOfPlatforms){
+                shipSelection = 1;
+
+                
+                
+            }
+            break;
+        //
+
+        case '2':
+            if (size2ShipCounter < numOf2Ships){
+                shipSelection = 2;
+
+                
+            }
+            break;
+
+        case'0':
+            printMatrix(playerShips, gridSize);
+            printf("x: %d\n", getPlayerMatrixX());
+            printf("z: %d\n", getPlayerMatrixZ());
+            printf("\n");
+            break;
+
+
 
 
 
@@ -197,4 +228,55 @@ void on_keyboard(unsigned char key, int x, int y)
 		
 	}
     glutPostRedisplay();
+}
+
+void up_key(unsigned char key, int x, int y){
+    switch(key)
+    {
+        
+
+        case 'w':
+        case 'W':
+            
+        case 's':
+        case 'S':
+            
+
+            
+        case 'a':
+        case 'A':
+            
+            
+        case 'd':
+        case 'D':
+            heliMoved=0;
+            break;
+
+
+        case 'q':
+        case 'Q':
+
+        case 'e':
+        case 'E':
+            
+                rotationDir=0;
+            break;
+
+
+        case 'i':
+        case 'I':
+
+        case 'k':
+        case 'K':
+         
+        case 'j':
+        case 'J':
+       
+        case 'l':
+        case 'L':
+            
+            targetMoved = 0;
+            
+            break;
+    }
 }

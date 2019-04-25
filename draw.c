@@ -8,9 +8,12 @@
 #include "constants.h"
 #include "functions.h"
 //nijansa podloge 0.1,0.3,0.9
+static float pomeraj;
+float tailRotationAngle;
+
 void DrawCircle()
 {
-    
+    /*
 
     glBegin(GL_TRIANGLE_FAN);
         glColor3f (0,0.4,1);
@@ -28,13 +31,47 @@ void DrawCircle()
             glVertex3f(x, 0, z);
 
         }
-    glEnd();
+    glEnd();*/
 
+    GLfloat Material[] = { 0, 0.55, 1, 0.5}; 
+
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+      
+        glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
+
+        
+
+
+
+        //glDisable(GL_LIGHTING);                   //TORUS
+        
+        glPushMatrix();
+        glRotatef(90,1,0,0);
+        glutSolidCone(12,0.5,100,20);
+        glPopMatrix();
+
+        glDisable(GL_LIGHTING); 
 }
 
-float tailRotationAngle;
+
 void drawHeli()
     {
+
+        //podesavanje direkcije repa
+        if(heliMoved){
+            pomeraj = heliSpeed*sin(rotation_parametar + heliDirAngle)*-1;
+            if (heliInsideX(pomeraj)){
+                heliX+=pomeraj;
+            }
+
+            pomeraj = heliSpeed*cos(rotation_parametar + heliDirAngle)*-1;
+            if (heliInsideZ(pomeraj)){
+                heliZ+=pomeraj;
+            }
+        }
+
         GLfloat Material[] = { 0.7, 0.7, 0.8, 1.0 }; 
 
         glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
@@ -51,7 +88,6 @@ void drawHeli()
         
         glPushMatrix();
         glTranslatef(heliX, 3, heliZ);
-        //glutSolidCube(0.5);
         glRotatef(90,1,0,0);
         glutSolidTorus(0.1,0.5,10,10);
         glPopMatrix();
@@ -65,7 +101,6 @@ void drawHeli()
         //glColor3f(0.7, 0.7, 0.7);                   //SFERA
         glPushMatrix();
         glTranslatef(heliX, 2.7, heliZ);
-        //glutSolidCube(0.5);
         glRotatef(90,1,0,0);
         glutSolidSphere(0.4,10,10);
         glPopMatrix();
@@ -79,12 +114,10 @@ void drawHeli()
         //glColor3f(0.7, 0.7, 0.7);                   //KUPA
         glPushMatrix();
         glTranslatef(heliX, 2.7, heliZ);
-        //glutSolidCube(0.5);
 
         if (heliMoved){ //rotacija repa u odnosu na smer kretanja
             tailRotationAngle=radToDeg(rotation_parametar + heliDirAngle);
             
-            heliMoved = false;
         }
         glRotatef((tailRotationAngle),0,1,0);
         glutSolidCone(0.2,1.5,10,10);
@@ -122,6 +155,19 @@ void drawHeli()
     }
 
     void drawTarget(){
+
+        if (targetMoved){
+            pomeraj = targetSpeed*sin(rotation_parametar + targetDir)*-1;
+            if (targetInsideX(pomeraj)){
+                targetX+=pomeraj;
+            }
+            pomeraj = targetSpeed*cos(rotation_parametar + targetDir)*-1;
+            if (targetInsideZ(pomeraj)){
+                targetZ+=pomeraj;
+            }
+
+        }
+
         glBegin(GL_TRIANGLE_FAN);
             glColor3f(0.9,0.3,0.3);
             glVertex3f(getTargetX(), 0.05, getTargetZ());
@@ -130,6 +176,23 @@ void drawHeli()
             glVertex3f(getTargetX() + 1,0.05, getTargetZ());
 
         glEnd();
+
+        GLfloat Material[] = { 1, 0, 0, 1.0 }; 
+
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+      
+        glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
+
+        glPushMatrix();
+        glTranslatef(targetX, 0.1, targetZ);
+        //glutSolidCube(0.5);
+        glRotatef(90,1,0,0);
+        glutSolidSphere(0.2,10,10);
+        glPopMatrix();
+
+        glDisable(GL_LIGHTING);
 
     }
 
@@ -193,30 +256,42 @@ void drawHeli()
             glVertex3f(x+0.9, 0.501, z+0.9);
             glVertex3f(x+0.9, 0.501, z+0.1);
 
-        glEnd();
-
-        drawShade(x,z);
-        drawShade(x+1,z);
-        drawShade(x-1,z);
-        drawShade(x,z+1);
-        drawShade(x,z-1);
-
-
-              
+        glEnd();              
     }
 
-    void draw2Ship(float x,float z){
+    void draw2Ship(float x,float z, int shipRotation){
+        switch (shipRotation){
+            case 0:
+                z+=0.5;
+                break;
+            case 1:
+                x+=0.5;
+                break;
+            case 2:
+                z+=0.5;
+                x+=1;
+                break;
+            case 3:
+                x+=0.5;
+                z+=1;
+                break;  
+        }
+
         GLfloat Material[] = { 0.9, 0.6, 0.3, 1.0 }; 
         glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
 
+        static const GLdouble equation[] = {0, 1, 0, 0};
+        glEnable(GL_CLIP_PLANE0);
         glEnable(GL_LIGHT0);
         glEnable(GL_LIGHTING);
       
         glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
 
         glPushMatrix();//paluba
+        glClipPlane(GL_CLIP_PLANE0, equation);
         glTranslatef(x, 0.5, z);
         glRotatef(90,1,0,0);
+        glRotatef(90,0,0,shipRotation%2);
         glScalef(1,0.5,1);
         glutSolidCone(1,1.3,10,10);
         glPopMatrix();
@@ -225,25 +300,44 @@ void drawHeli()
         glMaterialfv(GL_FRONT, GL_DIFFUSE, Material1);
 
         glPushMatrix();//dimnjak
-        glTranslatef(x+0.5, 1, z);
+        glClipPlane(GL_CLIP_PLANE0, equation);
+        glTranslatef(x+0.5*((shipRotation+1)%2), 1, z+0.5*(shipRotation%2));
         glRotatef(90,1,0,0);
+        glRotatef(90,0,0,shipRotation%2);
         glutSolidCone(0.2,3,10,10);
         glPopMatrix();
 
         glPushMatrix();//dimnjak
-        glTranslatef(x+0.1, 1.3, z);
+        glClipPlane(GL_CLIP_PLANE0, equation);
+        glTranslatef(x+0.1*((shipRotation+1)%2), 1.3, z+0.1*(shipRotation%2));
         glRotatef(90,1,0,0);
+        glRotatef(90,0,0,shipRotation%2);
         glutSolidCone(0.17,3.5,10,10);
         glPopMatrix();
 
 
         
 
-
+        glDisable(GL_CLIP_PLANE0);
         glDisable(GL_LIGHTING);
 
     }
 
+
+    void draw3Ship(float x, float z);
+    void draw4Ship(float x, float z);
+    void draw5Ship(float x, float z);
+
+    void drawShip(int size, float x, float z, float shipRotation){
+        switch (size){
+            case 1:
+                drawPlatform(x,z);
+                break;
+            case 2:
+                draw2Ship(x,z,shipRotation);
+                break;
+        }
+    }
 
     void drawShade(float x, float z){
         glBegin(GL_TRIANGLE_FAN);               //Senka
@@ -256,4 +350,3 @@ void drawHeli()
         glEnd(); 
 
     }
-
