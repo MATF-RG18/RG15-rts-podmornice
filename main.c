@@ -4,9 +4,9 @@
 #include <math.h>
 #include <string.h>
 #include <stdbool.h>
+#include <GL/freeglut.h>
 
 #include "constants.h"
-
 #include "timer.h"
 #include "reshape.h"
 #include "keyboard.h"
@@ -14,14 +14,7 @@
 #include "functions.h"
 
 
-
-#include <GL/freeglut.h>
-
-
-
-
-
-float cPers = 17;
+float cPers = 15,cPersMover;
 int pauseGame;
 float rotation_parametar = pi/4,rotationDir=0;
 int coords = false;
@@ -57,7 +50,10 @@ float size5ShipX[numOf5Ships],size5ShipZ[numOf5Ships];
 float targetX = 0;
 float targetZ = -5.5;
 
+int brojac = 0;
+int novac = 30 * 25;
 
+int shipPrices[6];
 
 
 
@@ -69,7 +65,6 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-
 	
 	glutInitWindowSize(1080,720);
 	glutInitWindowPosition(100,100);
@@ -92,6 +87,12 @@ int main(int argc, char** argv)
 
 	playerShips = initMatrixToZero(playerShips, gridSize);
 	AIShips = initMatrixToZero(AIShips, gridSize);
+
+	shipPrices[1] = 30 * 25;
+	shipPrices[2] = 25 * 25;
+	shipPrices[3] = 50 * 25;
+	shipPrices[4] = 75 * 25;
+	shipPrices[5] = 100 * 25;
 
 	
 	glClearColor(0.5,0.5,0.8,1);

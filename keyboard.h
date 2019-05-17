@@ -13,7 +13,7 @@ extern int heliMoved;
 extern int platform[];
 extern float platformX[];
 extern float platformZ[];
-extern float cPers;
+extern float cPers,cPersMover;
 
 extern int size2Ship[], size3Ship[], size4Ship[], size5Ship[];
 extern float size2ShipX[], size3ShipX[], size4ShipX[], size5ShipX[];
@@ -24,6 +24,9 @@ extern int **playerShips;
 
 extern int targetMoved;
 extern float targetDir;
+
+extern int novac;
+extern int shipPrices[];
 
 void on_keyboard(unsigned char key, int x, int y);
 void up_key(unsigned char key, int x, int y);

@@ -8,7 +8,7 @@ extern int size2Ship[], size3Ship[], size4Ship[], size5Ship[];
 extern float size2ShipX[], size3ShipX[], size4ShipX[], size5ShipX[];
 extern float size2ShipZ[], size3ShipZ[], size4ShipZ[], size5ShipZ[];
 extern int size2ShipRotation[],size3ShipRotation[],size4ShipRotation[],size5ShipRotation[];
-extern int platformCounter,size2ShipCounter,size23hipCounter,size4ShipCounter,size5ShipCounter;
+extern int platformCounter,size2ShipCounter,size3ShipCounter,size4ShipCounter,size5ShipCounter;
 
 extern int platform[];
 extern float platformX[];

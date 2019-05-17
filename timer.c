@@ -11,9 +11,12 @@
 // time_t current_time,start_time,time_passed;
 void on_timer(int id)
     {
-    	
+    	brojac += platformCounter;
+    	novac += platformCounter;
+
         if(id != TIMER_ID)
         	return;
+        printf("novz: %d\n", novac / 125 * 5);
 /*
 		if (!brojac) start_time=time(NULL);
         current_time = time(NULL);

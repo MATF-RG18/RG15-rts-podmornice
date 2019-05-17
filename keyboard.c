@@ -16,8 +16,11 @@ int size2ShipCounter = 0;
 int size3ShipCounter = 0;
 int size4ShipCounter = 0;
 int size5ShipCounter = 0;
+
 int shipRotation=0;
 int shipSelection=0;
+
+
 
 void on_keyboard(unsigned char key, int x, int y)
 {
@@ -26,11 +29,11 @@ void on_keyboard(unsigned char key, int x, int y)
 	{
         case 'g': //zoom out
         case 'G':
-            cPers+=0.1;
+            cPersMover=0.1;
             break;
         case 't': //zoom in
         case 'T':
-            cPers-=0.1;
+            cPersMover=-0.1;
             break;
 
         case 'w':
@@ -140,52 +143,27 @@ void on_keyboard(unsigned char key, int x, int y)
             }
             break;
 
+        case 'v':
+        case 'V':
+            printXZ();
+            break;
+
         case ' ':
             if(shipSelection != 0){
-                if (canPlaceShip(shipSelection,shipRotation) != 0){
+                if (canPlaceShip(shipSelection,shipRotation) != 0
+                    && shipPrices[shipSelection] <= novac
+                    ){
                     placeShip(shipSelection,shipRotation);
+                    
+                    printf ("kupljeno za %d!\n", shipPrices[shipSelection]/15);
+                    novac -= shipPrices[shipSelection];
+
                     shipRotation = 0;
                     shipSelection = 0;
                 }
-                /*
-                switch (shipSelection){
-                    case 1:
-
-
-                        if (playerShips[getPlayerMatrixX()][getPlayerMatrixZ()] == 0){
-                            platformX[platformCounter] = getHeliX();
-                            platformZ[platformCounter] = getHeliZ();
-                            platform[platformCounter]=1;
-                            platformCounter++;
-                            playerShips[getPlayerMatrixX()][getPlayerMatrixZ()]=1;
-
-                            shipRotation = 0;
-                            shipSelection = 0;
-                        }
-
-                        break;
-
-
-                    case 2:
-
-                        //TODO treba dodati proveru da li moze da se postavi
-                        size2ShipX[size2ShipCounter] = getHeliX();
-                        size2ShipZ[size2ShipCounter] = getHeliZ();
-                        size2Ship[size2ShipCounter]=1;
-                        size2ShipRotation[size2ShipCounter] = shipRotation;
-                        size2ShipCounter++;
-
-                        
-
-                        break;
-                }
-                */
             
                 
             }
-            break;
-        case 'v':
-            printXZ();
             break;
 
         case '1':
@@ -196,8 +174,6 @@ void on_keyboard(unsigned char key, int x, int y)
                 
             }
             break;
-        //
-
         case '2':
             if (size2ShipCounter < numOf2Ships){
                 shipSelection = 2;
@@ -205,7 +181,27 @@ void on_keyboard(unsigned char key, int x, int y)
                 
             }
             break;
+        case '3':
+            if (size3ShipCounter < numOf3Ships){
+                shipSelection = 3;
 
+                
+            }
+            break;
+        case '4':
+            if (size4ShipCounter < numOf4Ships){
+                shipSelection = 4;
+
+                
+            }
+            break;
+        case '5':
+            if (size5ShipCounter < numOf5Ships){
+                shipSelection = 5;
+
+                
+            }
+            break;
         case'0':
             printMatrix(playerShips, gridSize);
             printf("x: %d\n", getPlayerMatrixX());
@@ -233,6 +229,12 @@ void on_keyboard(unsigned char key, int x, int y)
 void up_key(unsigned char key, int x, int y){
     switch(key)
     {
+        case 'g': //zoom out
+        case 'G':
+        case 't': //zoom in
+        case 'T':
+            cPersMover=0;
+            break;
         
 
         case 'w':

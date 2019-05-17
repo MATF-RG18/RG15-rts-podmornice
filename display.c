@@ -17,9 +17,10 @@ void on_display(void)
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    cPers+=cPersMover;
     gluLookAt(
             cPers*sin(rotation_parametar), cPers, cPers*cos(rotation_parametar),
-            0, 0, 0,
+            heliX/3+targetX/3, 0, heliZ/3+targetZ/3,
             0, 1, 0
         );
 
@@ -30,7 +31,7 @@ void on_display(void)
 
 
 	//printMatrix(playerShips,gridSize);
-	for (i=0;i<gridSize;i++){
+	for (i=0;i<gridSize;i++){					//sencenje zauzetih kvadratica
     	for (j=0;j<gridSize;j++){
     		if(playerShips[i][j] != 0) drawShade(getPlXFromMatrix(i),getPlZFromMatrix(j));
     	}
@@ -51,6 +52,33 @@ void on_display(void)
 	for (i=0;i<numOf2Ships;i++){				//2Ship
 		if (size2Ship[i] != 0){
 			draw2Ship(size2ShipX[i],size2ShipZ[i],size2ShipRotation[i]);
+
+		}
+		else break;
+	}
+
+	for (i=0;i<numOf3Ships;i++){				//3Ship
+
+		if (size3Ship[i] != 0){
+			draw3Ship(size3ShipX[i],size3ShipZ[i],size3ShipRotation[i]);
+
+		}
+		else break;
+	}
+
+	for (i=0;i<numOf4Ships;i++){				//4Ship
+
+		if (size4Ship[i] != 0){
+			draw4Ship(size4ShipX[i],size4ShipZ[i],size4ShipRotation[i]);
+
+		}
+		else break;
+	}
+
+	for (i=0;i<numOf5Ships;i++){				//3Ship
+
+		if (size5Ship[i] != 0){
+			draw5Ship(size5ShipX[i],size5ShipZ[i],size5ShipRotation[i]);
 
 		}
 		else break;

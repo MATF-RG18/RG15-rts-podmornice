@@ -10,6 +10,7 @@
 //nijansa podloge 0.1,0.3,0.9
 static float pomeraj;
 float tailRotationAngle;
+static const GLdouble klipFja[] = {0, 1, 0, 0};
 
 void DrawCircle()
 {
@@ -123,25 +124,7 @@ void drawHeli()
         glutSolidCone(0.2,1.5,10,10);
         glPopMatrix();
 
-
-
-
         glDisable(GL_LIGHTING);
-
-
-
-
-
-/* kocka
-        glColor3f(1, 0, 0);
-        glPushMatrix();
-        glTranslatef(heliX, 0.5, heliZ);
-        glutWireCube(0.5);
-        glPopMatrix();
-        
-*/
-        //glEnable(GL_LIGHTING);
-
 
         //mesto gde se nalazi glavni brod odnosno helikopter
         glBegin(GL_TRIANGLE_FAN);
@@ -155,7 +138,7 @@ void drawHeli()
     }
 
     void drawTarget(){
-
+        //iscrtavanje ciljane tacke za gadjanje na protivnickoj tabli
         if (targetMoved){
             pomeraj = targetSpeed*sin(rotation_parametar + targetDir)*-1;
             if (targetInsideX(pomeraj)){
@@ -261,6 +244,9 @@ void drawHeli()
 
     void draw2Ship(float x,float z, int shipRotation){
         switch (shipRotation){
+            //odredjivanje centra broda
+            //na osnovu parametra shipRotation
+            //slicno ce biri primenjeno i u ostalim brodovima
             case 0:
                 z+=0.5;
                 break;
@@ -280,7 +266,6 @@ void drawHeli()
         GLfloat Material[] = { 0.9, 0.6, 0.3, 1.0 }; 
         glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
 
-        static const GLdouble equation[] = {0, 1, 0, 0};
         glEnable(GL_CLIP_PLANE0);
         glEnable(GL_LIGHT0);
         glEnable(GL_LIGHTING);
@@ -288,10 +273,10 @@ void drawHeli()
         glColorMaterial(GL_FRONT,GL_AMBIENT_AND_DIFFUSE);
 
         glPushMatrix();//paluba
-        glClipPlane(GL_CLIP_PLANE0, equation);
+        glClipPlane(GL_CLIP_PLANE0, klipFja);
         glTranslatef(x, 0.5, z);
         glRotatef(90,1,0,0);
-        glRotatef(90,0,0,shipRotation%2);
+        glRotatef(90,0,0,shipRotation%2);   //odredjivanje rotacije broda
         glScalef(1,0.5,1);
         glutSolidCone(1,1.3,10,10);
         glPopMatrix();
@@ -300,7 +285,7 @@ void drawHeli()
         glMaterialfv(GL_FRONT, GL_DIFFUSE, Material1);
 
         glPushMatrix();//dimnjak
-        glClipPlane(GL_CLIP_PLANE0, equation);
+        glClipPlane(GL_CLIP_PLANE0, klipFja);
         glTranslatef(x+0.5*((shipRotation+1)%2), 1, z+0.5*(shipRotation%2));
         glRotatef(90,1,0,0);
         glRotatef(90,0,0,shipRotation%2);
@@ -308,7 +293,7 @@ void drawHeli()
         glPopMatrix();
 
         glPushMatrix();//dimnjak
-        glClipPlane(GL_CLIP_PLANE0, equation);
+        glClipPlane(GL_CLIP_PLANE0, klipFja);
         glTranslatef(x+0.1*((shipRotation+1)%2), 1.3, z+0.1*(shipRotation%2));
         glRotatef(90,1,0,0);
         glRotatef(90,0,0,shipRotation%2);
@@ -324,11 +309,162 @@ void drawHeli()
     }
 
 
-    void draw3Ship(float x, float z);
-    void draw4Ship(float x, float z);
-    void draw5Ship(float x, float z);
+    void draw3Ship(float x, float z, int shipRotation){
+
+        switch (shipRotation){
+            case 0:
+                z+=0.5;
+                x-=0.5;
+                break;
+            case 1:
+                z-=0.5;
+                x+=0.5;
+                break;
+            case 2:
+                z+=0.5;
+                x+=1.5;
+                break;
+            case 3:
+                x+=0.5;
+                z+=1.5;
+                break;  
+        }
+
+        GLfloat Material[] = { 0.9, 0.6, 0.9, 1.0 }; 
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
+
+
+        glEnable(GL_LIGHT0);        // telo podmornice (sfera)
+        glEnable(GL_LIGHTING);
+        glPushMatrix();
+        glTranslatef(x, 0.1, z);
+        glRotatef(90,0,shipRotation%2,0);
+        glScalef( 3, 1, 1);
+        
+        glutSolidSphere(0.5,10,10);
+        glPopMatrix();
+
+        GLfloat Material1[] = { 0.4, 0.3, 0.3, 1.0 }; 
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material1);
+
+        glPushMatrix();             // paluba podmornice (kupa)
+        glTranslatef(x+0.5*((shipRotation+1)%2), 1, z+0.5*((shipRotation)%2));
+        glRotatef(90,1,0,0);
+        glRotatef(90,0,0,shipRotation%2);
+
+        glScalef( 2, 1, 1);
+        glutSolidCone(0.2,3.5,10,10);
+        glPopMatrix();
+
+        glDisable(GL_LIGHTING);
+
+    }
+    void draw4Ship(float x, float z, int shipRotation){
+
+        GLfloat Material[] = { 0.9, 0.2, 0.4, 1.0 }; 
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
+
+
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+
+        switch (shipRotation){
+            case 0:
+                z+=0.5;
+                x-=1;
+                break;
+            case 1:
+                z-=1;
+                x+=0.5;
+                break;
+            case 2:
+                z+=0.5;
+                x+=2;
+                break;
+            case 3:
+                x+=0.5;
+                z+=2;
+                break;  
+        }
+
+        glPushMatrix();
+        glTranslatef(x,0.75,z);
+
+        glRotatef(90,0,shipRotation%2,0);
+        glScalef( 2, 1, 1);
+        glutSolidCube(0.6);
+        glPopMatrix();
+
+        GLfloat Material1[] = { 0.6, 0.6, 0.9, 1.0 };
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material1);
+        //iscrtavanje palube
+        glPushMatrix();
+        glTranslatef(x, 0.6, z);
+        glRotatef(90,1,0,0);
+        glRotatef(90,0,0,shipRotation%2);
+        glScalef( 4, 1, 1);
+        
+        glutSolidCone(0.5,5,10,10);
+        glPopMatrix();
+
+        glDisable(GL_LIGHTING);
+
+    }
+    void draw5Ship(float x, float z, int shipRotation){
+
+
+        switch (shipRotation){
+            case 0:
+                z+=0.5;
+                x-=1.5;
+                break;
+            case 1:
+                z-=1.5;
+                x+=0.5;
+                break;
+            case 2:
+                z+=0.5;
+                x+=2.5;
+                break;
+            case 3:
+                x+=0.5;
+                z+=2.5;
+                break;  
+        }
+
+        GLfloat Material[] = { 0.9, 0.9, 1, 1.0 }; 
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material);
+        //iscrtavanje sfere
+
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+        glPushMatrix();
+        glTranslatef(x, 0.7, z);
+        glRotatef(90,0,shipRotation%2,0);
+        glScalef( 4, 1, 1);
+        
+        glutSolidSphere(0.35,10,10);
+        glPopMatrix();
+
+        GLfloat Material1[] = { 0.6, 0.9, 0.5, 1.0 }; 
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, Material1);
+        //iscrtavanje palube
+
+        glPushMatrix();
+        glTranslatef(x, 0.6, z);
+        glRotatef(90,1,0,0);
+        glRotatef(90,0,0,shipRotation%2);
+        glScalef( 5, 1, 1);
+        
+        glutSolidCone(0.5,5,10,10);
+        glPopMatrix();
+
+        glDisable(GL_LIGHTING);
+
+    }
 
     void drawShip(int size, float x, float z, float shipRotation){
+        // pomocna funkcija koja crta brod dok je selektovan
         switch (size){
             case 1:
                 drawPlatform(x,z);
@@ -336,11 +472,21 @@ void drawHeli()
             case 2:
                 draw2Ship(x,z,shipRotation);
                 break;
+            case 3:
+                draw3Ship(x,z,shipRotation);
+                break;
+            case 4:
+                draw4Ship(x,z,shipRotation);
+                break;
+            case 5:
+                draw5Ship(x,z,shipRotation);
+                break;
         }
     }
 
     void drawShade(float x, float z){
-        glBegin(GL_TRIANGLE_FAN);               //Senka
+        //crta plavu senku na zauzetim poljima
+        glBegin(GL_TRIANGLE_FAN);
             glColor3f(0.1,0.3,0.9);
             glVertex3f(x, 0.04, z);
             glVertex3f(x, 0.04, z+1);

@@ -79,8 +79,8 @@ float getPlXFromMatrix(int x){
 float getPlZFromMatrix(int z){
 	return 0.5+z;
 }
-
-int canPlaceShip(int shipSize, int shipRotation){//provera da li brod moze da se postavi
+									//provera da li brod moze da se postavi
+int canPlaceShip(int shipSize, int shipRotation){
 	int x=getPlayerMatrixX();
 	int z=getPlayerMatrixZ();
 	int i;
@@ -112,8 +112,8 @@ int canPlaceShip(int shipSize, int shipRotation){//provera da li brod moze da se
 int placeShip(int shipSize, int shipRotation){
 	int x=getPlayerMatrixX();
 	int z=getPlayerMatrixZ();
-	int i;
-	switch (shipRotation){
+	int i;								//markiranje zauzetih polja
+	switch (shipRotation){ 				//u zavsnosti od rotacije i duzine
 		case 0:
 			if (x<gridSize-1 && playerShips[x+1][z]==0)
 				playerShips[x+1][z]=-1;
@@ -202,6 +202,27 @@ int placeShip(int shipSize, int shipRotation){
             size2Ship[size2ShipCounter]=1;
             size2ShipRotation[size2ShipCounter] = shipRotation;
             size2ShipCounter++;
+            break;
+        case 3:
+			size3ShipX[size3ShipCounter] = getHeliX();
+            size3ShipZ[size3ShipCounter] = getHeliZ();
+            size3Ship[size3ShipCounter]=1;
+            size3ShipRotation[size3ShipCounter] = shipRotation;
+            size3ShipCounter++;
+            break;
+        case 4:
+			size4ShipX[size4ShipCounter] = getHeliX();
+            size4ShipZ[size4ShipCounter] = getHeliZ();
+            size4Ship[size4ShipCounter]=1;
+            size4ShipRotation[size4ShipCounter] = shipRotation;
+            size4ShipCounter++;
+            break;
+        case 5:
+			size5ShipX[size5ShipCounter] = getHeliX();
+            size5ShipZ[size5ShipCounter] = getHeliZ();
+            size5Ship[size5ShipCounter]=1;
+            size5ShipRotation[size5ShipCounter] = shipRotation;
+            size5ShipCounter++;
             break;
 
 	}
